@@ -20,7 +20,7 @@ public abstract class DeathScreenMixin extends Screen {
 		super(title);
 	}
 
-	@Inject(method = "initWidgets", at = @At("TAIL"))
+	@Inject(method = "init", at = @At("TAIL"))
 	private void derniereChance$addButton(CallbackInfo ci) {
 		// Si le joueur est déjà définitivement mort, on ne propose plus l'option :
 		// la "dernière chance" a déjà été utilisée et perdue.
@@ -28,9 +28,11 @@ public abstract class DeathScreenMixin extends Screen {
 			return;
 		}
 
-		int buttonWidth = 150;
+		// Les deux boutons vanilla ("Réapparaître" / "Retour au menu") font 200 de large
+		// et sont centrés. On ajoute notre bouton juste en dessous, avec la même largeur.
+		int buttonWidth = 200;
 		int x = this.width / 2 - buttonWidth / 2;
-		int y = this.height - 42;
+		int y = this.height / 4 + 120 + 6;
 
 		this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.derniere_chance.button"), button -> {
 			CombatDifficulty difficulty = new CombatDifficulty(ClientCombatData.getAttempts());
