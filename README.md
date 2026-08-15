@@ -15,22 +15,31 @@ de dépendance à une texture Undertale).
   densité de projectiles et dégâts par contact de façon volontairement
   agressive — à utiliser seulement quand tu n'as plus le choix.
 
-## Installation / compilation
+## Compilation automatique sur GitHub (CI)
 
-Ce projet suit la structure standard d'un mod **Fabric** (comme le
-[fabric-example-mod](https://github.com/FabricMC/fabric-example-mod)).
-Pour le compiler toi-même :
+Le projet inclut `.github/workflows/build.yml` : à chaque push sur `main`
+(ou pull request), GitHub Actions compile le mod tout seul et met le
+`.jar` résultant en téléchargement dans l'onglet **Actions → (le run) →
+Artifacts** de ton dépôt. Cette CI ne dépend pas du wrapper Gradle : elle
+provisionne Gradle 8.7 elle-même, donc ça fonctionne même si
+`gradle-wrapper.jar` n'est pas commité.
 
-1. Installe un **JDK 17**.
-2. Récupère le [wrapper Gradle officiel Fabric](https://github.com/FabricMC/fabric-example-mod)
-   (les fichiers `gradlew`, `gradlew.bat` et le dossier `gradle/wrapper/`) et
-   copie-les à la racine de ce projet — je ne peux pas générer le binaire
-   `gradle-wrapper.jar` depuis cet environnement, donc ce dossier n'est pas
-   inclus ici.
-3. Depuis la racine du projet : `./gradlew build`
-   Le `.jar` compilé apparaît dans `build/libs/`.
-4. Place le `.jar` dans le dossier `mods/` de ton instance Fabric (avec
-   **Fabric API** installée aussi, c'est une dépendance obligatoire).
+## Compilation en local
+
+Le dossier `gradle/wrapper/` et les scripts `gradlew` / `gradlew.bat` sont
+inclus, **sauf** le fichier binaire `gradle-wrapper.jar` (je ne peux pas
+générer de binaire depuis cet environnement). Deux options :
+
+- **La plus simple** : installe Gradle une fois (`gradle` disponible dans
+  le PATH), puis à la racine du projet lance `gradle wrapper` — ça génère
+  le `gradle-wrapper.jar` manquant. Ensuite `./gradlew build` fonctionnera
+  normalement, y compris sans Gradle installé globalement.
+- **Alternative** : installe un **JDK 17** puis un **Gradle 8.7** complet,
+  et lance directement `gradle build` (sans passer par le wrapper).
+
+Le `.jar` compilé apparaît dans `build/libs/`. Place-le ensuite dans le
+dossier `mods/` de ton instance Fabric (avec **Fabric API** installée
+aussi, c'est une dépendance obligatoire).
 
 ## Pousser sur GitHub
 
@@ -43,7 +52,7 @@ git init
 git add .
 git commit -m "Mod Dernière Chance"
 git branch -M main
-git remote add origin <URL_DE_TON_DEPOT>
+git remote add origin https://github.com/CouscousTaijine/Last-chance-mod.git
 git push -u origin main
 ```
 
