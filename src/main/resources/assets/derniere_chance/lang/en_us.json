@@ -1,0 +1,11 @@
+{
+  "gui.derniere_chance.button": "Last Chance",
+  "gui.derniere_chance.combat_title": "Last Chance",
+  "gui.derniere_chance.quit": "Quit",
+  "gui.derniere_chance.wave_incoming": "Wave %s / %s...",
+  "gui.derniere_chance.wave_progress": "Wave %s / %s",
+  "gui.derniere_chance.victory": "STAY DETERMINED... VICTORY",
+  "gui.derniere_chance.defeat": "GAME OVER",
+  "gui.derniere_chance.game_over": "You did not survive your last chance.",
+  "gui.derniere_chance.permanently_dead": "You already used and lost your Last Chance."
+}

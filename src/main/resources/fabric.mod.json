@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "derniere_chance",
+  "version": "${version}",
+  "name": "Dernière Chance",
+  "description": "Ajoute une troisième option à l'écran de mort : un combat façon Undertale, de plus en plus dur à chaque tentative, qui peut te sauver... ou te condamner définitivement.",
+  "authors": ["Toi"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/derniere_chance/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.derniere.chance.DerniereChanceMod"],
+    "client": ["com.derniere.chance.DerniereChanceClient"]
+  },
+  "mixins": [
+    "derniere_chance.mixins.json",
+    "derniere_chance.client.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "gui.derniere_chance.button": "Dernière Chance",
+  "gui.derniere_chance.combat_title": "Dernière Chance",
+  "gui.derniere_chance.quit": "Quitter",
+  "gui.derniere_chance.wave_incoming": "Vague %s / %s...",
+  "gui.derniere_chance.wave_progress": "Vague %s / %s",
+  "gui.derniere_chance.victory": "SURVIVRE... VICTOIRE",
+  "gui.derniere_chance.defeat": "GAME OVER",
+  "gui.derniere_chance.game_over": "Tu n'as pas survécu à ta dernière chance.",
+  "gui.derniere_chance.permanently_dead": "Tu as déjà utilisé et perdu ta Dernière Chance."
+}
