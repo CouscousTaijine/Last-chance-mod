@@ -42,6 +42,16 @@ public class LastChanceCombatScreen extends Screen {
 	private float heartY = 0;
 	private int hp;
 
+	// On ne peut pas se fier à KeyBinding#isPressed() pendant qu'un écran est
+	// ouvert (ce polling ne reflète pas l'état réel des touches dans ce
+	// contexte) : on suit donc nous-mêmes l'état pressé/relâché via
+	// keyPressed()/keyReleased(), en respectant les touches configurées par
+	// le joueur (matchesKey), donc ZQSD sur clavier AZERTY, WASD sur QWERTY, etc.
+	private boolean moveForward;
+	private boolean moveBack;
+	private boolean moveLeft;
+	private boolean moveRight;
+
 	private boolean resultSent = false;
 
 	public LastChanceCombatScreen(CombatDifficulty difficulty) {
@@ -67,6 +77,47 @@ public class LastChanceCombatScreen extends Screen {
 	@Override
 	public boolean shouldPause() {
 		return false;
+	}
+
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (updateMovementKeys(keyCode, scanCode, true)) {
+			return true;
+		}
+		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+		if (updateMovementKeys(keyCode, scanCode, false)) {
+			return true;
+		}
+		return super.keyReleased(keyCode, scanCode, modifiers);
+	}
+
+	private boolean updateMovementKeys(int keyCode, int scanCode, boolean pressed) {
+		if (client == null) return false;
+		var options = client.options;
+		boolean handled = false;
+
+		if (options.forwardKey.matchesKey(keyCode, scanCode)) {
+			moveForward = pressed;
+			handled = true;
+		}
+		if (options.backKey.matchesKey(keyCode, scanCode)) {
+			moveBack = pressed;
+			handled = true;
+		}
+		if (options.leftKey.matchesKey(keyCode, scanCode)) {
+			moveLeft = pressed;
+			handled = true;
+		}
+		if (options.rightKey.matchesKey(keyCode, scanCode)) {
+			moveRight = pressed;
+			handled = true;
+		}
+
+		return handled;
 	}
 
 	private float arenaHalfW() {
@@ -173,14 +224,11 @@ public class LastChanceCombatScreen extends Screen {
 	}
 
 	private void moveHeart() {
-		if (client == null) return;
-		var options = client.options;
-
 		float dx = 0, dy = 0;
-		if (options.forwardKey.isPressed()) dy -= 1;
-		if (options.backKey.isPressed()) dy += 1;
-		if (options.leftKey.isPressed()) dx -= 1;
-		if (options.rightKey.isPressed()) dx += 1;
+		if (moveForward) dy -= 1;
+		if (moveBack) dy += 1;
+		if (moveLeft) dx -= 1;
+		if (moveRight) dx += 1;
 
 		if (dx != 0 && dy != 0) {
 			// Normalisation pour ne pas aller plus vite en diagonale.
@@ -208,8 +256,14 @@ public class LastChanceCombatScreen extends Screen {
 			this.clearChildren();
 			this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.derniere_chance.quit"), b -> {
 				if (client != null) {
-					client.disconnect();
-					client.setScreen(new TitleScreen());
+					try {
+						client.disconnect();
+					} finally {
+						// Quoi qu'il arrive pendant la déconnexion, on force le retour
+						// au menu titre : on ne veut jamais rester coincé sur un écran
+						// figé si disconnect() échoue ou prend un chemin inattendu.
+						client.setScreen(new TitleScreen());
+					}
 				}
 			}).dimensions(this.width / 2 - 75, this.height / 2 + 70, 150, 20).build());
 		}
